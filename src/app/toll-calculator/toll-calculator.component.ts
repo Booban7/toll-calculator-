@@ -28,10 +28,7 @@ const HOLIDAYS = [
 })
 export class TollCalculatorComponent implements OnInit {
   currentTime: string;
-  tollFree = 'Toll Free';
   currentCost: number;
-  maxTollCost = '';
-  vehicles = VEHICLES_HAS_FEE
   holidays = HOLIDAYS;
 
   constructor() {

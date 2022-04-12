@@ -9,22 +9,34 @@ describe('AppComponent', () => {
     }).compileComponents();
   });
 
-  it('Should cost 9 SEK between 18.00 and 18.30', () => {
+  it('Should cost 9 SEK between 18.00 and 18.30 for car', () => {
     const fixture = TestBed.createComponent(TollCalculatorComponent);
     const app = fixture.componentInstance;
     expect(app.calculateTollFee(['2022-02-02 18:00:00'], 'Car')).toBe(9);
   });
 
-  it('Should cost 0 SEK between 14.00 and 18.30', () => {
+  it('Should cost 22 SEK between 15.30 and 16.59 for car', () => {
     const fixture = TestBed.createComponent(TollCalculatorComponent);
     const app = fixture.componentInstance;
-    expect(app.calculateTollFee(['2022-02-02 18:00:00'], 'Diplomat')).toBe(0);
+    expect(app.calculateTollFee(['2022-09-08 15:49:48'], 'Car')).toBe(22);
   });
 
-  it('Should cost 0 for holiday', () => {
+  it('Should cost 0 SEK for Diplomat during toll-hour', () => {
     const fixture = TestBed.createComponent(TollCalculatorComponent);
     const app = fixture.componentInstance;
-    expect(app.calculateTollFee(['2022-05-26 18:00:00'], 'Car')).toBe(0);
+    expect(app.calculateTollFee(['2022-03-15 16:44:45'], 'Diplomat')).toBe(0);
+  });
+
+  it('Should cost 0 SEK for Motorbike during toll-hour', () => {
+    const fixture = TestBed.createComponent(TollCalculatorComponent);
+    const app = fixture.componentInstance;
+    expect(app.calculateTollFee(['2022-04-12 14:15:00'], 'Motorbike')).toBe(0);
+  });
+
+  it('Should cost 0 for AscensionDay', () => {
+    const fixture = TestBed.createComponent(TollCalculatorComponent);
+    const app = fixture.componentInstance;
+    expect(app.calculateTollFee(['2022-05-26 14:10:08'], 'Car')).toBe(0);
   });
 
   it('Should cost 0 for weekend', () => {
@@ -33,16 +45,28 @@ describe('AppComponent', () => {
     expect(app.calculateTollFee(['2022-04-09 18:00:00'], 'Car')).toBe(0);
   });
 
-  it('Should cost 9 SEK between 18.00 and 19.00', () => {
+  it('Should cost 47 SEK for multiple passage on a weekday', () => {
     const fixture = TestBed.createComponent(TollCalculatorComponent);
     const app = fixture.componentInstance;
 
-    let listOfDatesToCheck = [
-      '2022-02-02 18:00:00',
-      '2022-02-02 19:00:00',
-      '2022-02-01 13:00:00',
+    let listOfPassagesToCheck = [
+      '2022-04-14 09:11:48', // 9
+      '2022-04-14 15:12:12', // 16
+      '2022-04-14 16:09:08', // 22
     ];
-    expect(app.calculateTollFee(listOfDatesToCheck, 'Car')).toBe(18);
+    expect(app.calculateTollFee(listOfPassagesToCheck, 'Car')).toBe(47);
+  });
+
+  it('Should cost 0 SEK for multiple passage on MidsummerEve', () => {
+    const fixture = TestBed.createComponent(TollCalculatorComponent);
+    const app = fixture.componentInstance;
+
+    let listOfPassagesToCheck = [
+      '2022-06-24 07:11:48', // 9
+      '2022-06-24 12:12:12', // 16
+      '2022-06-24 18:09:08', // 22
+    ];
+    expect(app.calculateTollFee(listOfPassagesToCheck, 'Car')).toBe(0);
   });
 
   it('Should cost 60 SEK for maximum day fee', () => {
@@ -60,18 +84,15 @@ describe('AppComponent', () => {
     expect(app.calculateTollFee(listOfPassagesToCheck, 'Car')).toBe(60);
   });
 
-  it('Should cost 9 for multiple passages which include holidays and weekend day', () => {
+  it('Should cost 0 for multiple passages with emergency vehicle on a weekday', () => {
     const fixture = TestBed.createComponent(TollCalculatorComponent);
     const app = fixture.componentInstance;
 
     let listOfDatesToCheck = [
-      '2022-02-02 18:00:00',
-      '2022-01-06 13:00:00',
-      '2022-01-09 13:00:00',
+      '2022-06-22 09:35:14', // 9
+      '2022-06-22 13:14:11', // 9
+      '2022-06-22 15:00:55', // 16
     ];
-
-    expect(app.calculateTollFee(listOfDatesToCheck, 'Car')).toBe(9);
+    expect(app.calculateTollFee(listOfDatesToCheck, 'Emergency')).toBe(0);
   });
-
-
 });
