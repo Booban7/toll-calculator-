@@ -1,6 +1,8 @@
 # TollCalc
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.0.1.
+Calculates toll-fee for vehicles in Gothenburg for the year 2022. 
+No UI.
+Written in Angular using Typescript.
 
 ## Development server
 
